@@ -21,3 +21,23 @@ if (Meteor.isServer) {
     // code to run on server at startup
   });
 }
+
+
+Meteor.methods({
+  addGuess(questionId,userId,guess){
+    question = Questions.findOne(questionId);
+    var setModifier = {};
+    guessValue = guesses;
+    if (question.guesses[userId]){
+        guessValue = guessValue - question.guesses[userId];
+    }else{
+        setModifier['$inc'] = setModifier['$inc']|| {};
+        setModifier['$inc']['userLength'] = 1;
+    }
+    setModifier['$set'] = setModifier['$set'] || {};
+    setModifier['$set']['guesses.'+userId] = guess;
+    setModifier['$inc'] = setModifier['$inc'] || {};
+    setModifier['$inc']['sum'] = guessValue;
+    Questions.update(questionId, setModifier);
+  }
+});
