@@ -27,7 +27,10 @@
         (between {{question1.min}} and {{question1.max}}):
         <input TYPE="hidden" id="guessId" VALUE={{question1._id}}>
         <input id="guessValue" type="number" name="quantity" min={{question1.min}} max={{question1.max}} value={{guess}}>
-        <button type="button" onclick={{addGuess}}>Guess!</button>
+        <button type="button" id='guess'>Guess!</button>
       </form>
-  {{/if}}
+
+    {{/if}}
+  <button type="button" id='previous'>previous</button>
+  <button type="button" id='next'>next</button>
 </template>

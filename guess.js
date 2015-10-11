@@ -2,9 +2,11 @@ if (Meteor.isClient) {
   // counter starts at 0
   Session.setDefault('counter', 0);
 
+
   Template.question.helpers({
     question1: function () {
-        Session.set('question1',Questions.findOne());
+        skipper = (Session.get('skipper') || 0);
+        Session.set('question1',Questions.findOne({},{skip: skipper}));
         return Session.get('question1');
     },
     average: function(){
@@ -25,11 +27,28 @@ if (Meteor.isClient) {
     }
   });
   Template.question.events({
-    'click button': function () {
+    'click #guess': function () {
         var guess = parseInt( $('#guessValue').val() );
         var id = $('#guessId').val();
         Meteor.call("addGuess",id,Meteor.userId(),guess);
         Session.set('question1',Questions.findOne());
+    },
+    'click #next': function () {
+        skipper = (Session.get('skipper') || 0 )+1;
+        max = Questions.find().count() -1;
+        if (skipper > max){
+            skipper = max;
+        }
+        Session.set('question1',Questions.findOne({},{skip: skipper}));
+        Session.set('skipper',skipper);
+    },
+    'click #previous': function () {
+        skipper = (Session.get('skipper') || 0 )-1;
+        if (skipper < 0){
+            skipper = 0;
+        }
+        Session.set('question1',Questions.findOne({},{skip: skipper}));
+        Session.set('skipper',skipper);
     }
   });
 }
@@ -59,3 +78,4 @@ Meteor.methods({
     Questions.update(questionId, setModifier);
   }
 });
+
