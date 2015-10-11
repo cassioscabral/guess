@@ -27,7 +27,7 @@ Meteor.methods({
   addGuess(questionId,userId,guess){
     question = Questions.findOne(questionId);
     var setModifier = {};
-    guessValue = guesses;
+    guessValue = guess;
     if (question.guesses[userId]){
         guessValue = guessValue - question.guesses[userId];
     }else{
