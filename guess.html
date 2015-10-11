@@ -1,15 +1,38 @@
 <head>
-  <title>guess</title>
+  <title>Guess Game</title>
 </head>
 
-<body>    
-  <h1>Welcome to Meteor!</h1>
+<body>
+  <h1>Guess how many</h1>
   {{> loginButtons}}
 
   {{> hello}}
+
+  <div class="container">
+      <div class="row">
+          <div class="col-md-2">
+              <a href="#" class="left">left</a>
+
+          </div>
+          <div class="col-md-8">
+            {{>main}}
+          </div>
+          <div class="col-md-2">
+              <a href="#" class="right">right</a>
+          </div>
+      </div>
+  </div>
 </body>
 
 <template name="hello">
   <button>Click Me</button>
   <p>You've pressed the button {{counter}} times.</p>
+</template>
+
+<template name="main">
+  <img src="{{data.image_url}}" alt="">
+  <form class="new-guess text-center">
+      <input type="number" name="guess" min="{{data.min}}" max="{{data.max}}" > {{data.answer_unit}}
+      <input type="submit" class="bt bt-success" name="submit" value="OK">
+  </form>
 </template>
