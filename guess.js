@@ -2,10 +2,9 @@ if (Meteor.isClient) {
   // counter starts at 0
   Session.setDefault('counter', 0);
 
-
   Template.question.helpers({
     question1: function () {
-        skipper = (Session.get('skipper') || 0);
+        skipper = (Session.get('skipper') || 0 );
         Session.set('question1',Questions.findOne({},{skip: skipper}));
         return Session.get('question1');
     },
@@ -26,12 +25,14 @@ if (Meteor.isClient) {
         return question1.type;
     }
   });
+
   Template.question.events({
     'click #guess': function () {
         var guess = parseInt( $('#guessValue').val() );
         var id = $('#guessId').val();
         Meteor.call("addGuess",id,Meteor.userId(),guess);
-        Session.set('question1',Questions.findOne());
+        skipper = (Session.get('skipper') || 0 );
+        Session.set('question1',Questions.findOne({},{skip: skipper}));
     },
     'click #next': function () {
         skipper = (Session.get('skipper') || 0 )+1;
