@@ -2,14 +2,28 @@
   <title>guess</title>
 </head>
 
-<body>    
+<body>
   <h1>Welcome to Meteor!</h1>
   {{> loginButtons}}
 
-  {{> hello}}
+  {{> question}}
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="question">
+  <h2>{{question1.title}}</h2>
+  <h3>the average guess is {{average}}</h3>
+  <img src={{question1.imageUrl}}>
+    {{#if voted}}
+        <p>Your guess was {{voted}}</p>
+        <p>The rigth weight was {{weight}}</p>
+    {{else}}
+      <form>
+        (between {{question1.min}} and {{question1.max}}):
+        <input TYPE="hidden" id="guessId" VALUE={{question1._id}}>
+        <input id="guessValue" type="number" name="quantity" min={{question1.min}} max={{question1.max}} value={{guess}}>
+        <button type="button" onclick={{addGuess}}>Guess!</button>
+      </form>
+  {{/if}}
 </template>
+
+

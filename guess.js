@@ -2,6 +2,41 @@ if (Meteor.isClient) {
   // counter starts at 0
   Session.setDefault('counter', 0);
 
+  Template.question.helpers({
+    question1: function () {
+        Session.set('question1',Questions.findOne());
+        return Session.get('question1');
+    },
+    average: function(){
+        question1 = Session.get('question1');
+        return (question1.sum / question1.userLength) || 0;
+    },
+    voted: function(){
+        question1 = Session.get('question1');
+        return question1.guesses[Meteor.userId()];
+    },
+    weight: function(){
+        question1 = Session.get('question1');
+        return question1.answer;
+    },
+    type: function(){
+        question1 = Session.get('question1');
+        return question1.type;
+    }
+  });
+  Template.question.events({
+    'click button': function () {
+        var guess = parseInt( $('#guessValue').val() );
+        var id = $('#guessId').val();
+        Meteor.call("addGuess",id,Meteor.userId(),guess);
+        Session.set('question1',Questions.findOne());
+    }
+  });
+
+
+
+
+
   Template.hello.helpers({
     counter: function () {
       return Session.get('counter');
@@ -12,20 +47,26 @@ if (Meteor.isClient) {
     'click button': function () {
       // increment the counter when button is clicked
       Session.set('counter', Session.get('counter') + 1);
+      Session.set('question1',Questions.findOne());
     }
   });
 }
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
-    // code to run on server at startup
   });
 }
 
 
 Meteor.methods({
   addGuess(questionId,userId,guess){
+    if (! userId) {
+        throw new Meteor.Error("not-authorized");
+    }
     question = Questions.findOne(questionId);
+    if (! question) {
+        throw new Meteor.Error("wrong id or not-authorized");
+    }
     var setModifier = {};
     guessValue = guess;
     if (question.guesses[userId]){
